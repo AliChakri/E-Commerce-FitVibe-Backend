@@ -33,7 +33,7 @@ orderRoute.get('/', userAuth, getOrders);
 
 
 // Admin: Dashboard orders
-orderRoute.get('/dash/all', userAuth, checkAdmin, getUsersOrders);
+orderRoute.get('/all', userAuth, checkAdmin, getUsersOrders);
 
 // Get single order details
 orderRoute.get('/:id', userAuth, getOrderById);
