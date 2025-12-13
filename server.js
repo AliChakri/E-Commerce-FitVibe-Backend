@@ -4,79 +4,62 @@ const app = express();
 const mongoose = require("mongoose");
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-
-// ---------- ROUTES ----------
-const authRouter = require('./routes/AuthRoutes');
-const productRoute = require('./routes/ProductRoutes');
-const cartRouter = require("./routes/CartRoutes");
-const analyticsRoutes = require('./routes/AnalyticsRoutes');
-const orderRoute = require("./routes/OrderRoutes");
-const UserRoute = require("./routes/UserRoutes");
-const NotificationRoutes = require("./routes/NotificationRoutes");
-const ReportRoute = require("./routes/ReportRoutes");
+const http = require("http");
+const { Server } = require("socket.io");
 
 // ---------- Middlewares ----------
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    origin: process.env.CLIENT_URL,
     credentials: true,
   })
 );
 
-// Routes
-app.use('/api/auth', authRouter);
-app.use('/api/users', UserRoute);
-app.use('/products', productRoute);
-app.use('/user/cart', cartRouter);
-app.use('/api/order', orderRoute);
-app.use('/api/analytics', analyticsRoutes);
-app.use('/api/notification', NotificationRoutes);
-app.use('/api/report', ReportRoute);
+// Health check
+app.get("/", (req, res) => {
+  res.status(200).json({ status: "OK" });
+});
 
-// --- SOCKET.IO SETUP --- //
-const http = require("http");
-const { Server } = require("socket.io");
+// ---------- ROUTES ----------
+app.use('/api/auth', require('./routes/AuthRoutes'));
+app.use('/api/users', require('./routes/UserRoutes'));
+app.use('/api/products', require('./routes/ProductRoutes'));
+app.use('/api/cart', require("./routes/CartRoutes"));
+app.use('/api/order', require("./routes/OrderRoutes"));
+app.use('/api/analytics', require('./routes/AnalyticsRoutes'));
+app.use('/api/notification', require("./routes/NotificationRoutes"));
+app.use('/api/report', require("./routes/ReportRoutes"));
 
+// ---------- SOCKET.IO ----------
 const server = http.createServer(app);
 
-// create socket.io server
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL,
-    methods: ["GET", "POST"],
+    origin: process.env.CLIENT_URL,
     credentials: true,
   },
 });
 
-// socket events
 io.on("connection", (socket) => {
-  // console.log("User connected:", socket.id);
-
-  // user joins room
   socket.on("joinRoom", (userId) => {
     socket.join(userId);
-    // console.log(`User ${userId} joined room`);
-  });
-
-  // user disconnects
-  socket.on("disconnect", () => {
-    // console.log(" User disconnected:", socket.id);
   });
 });
 
-
-// make io available in routes/controllers
 app.set("io", io);
-// --- MONGO + START SERVER --- //
+
+// ---------- MONGO + START SERVER ----------
+const PORT = process.env.PORT || 10000;
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("Connected to DataBase");
-    server.listen(process.env.PORT, () => {
-      console.log(`Listening on Port ${process.env.PORT}`);
+    console.log("Connected to Database");
+    server.listen(PORT, () => {
+      console.log(`Listening on port ${PORT}`);
     });
   })
   .catch((err) => console.log(err.message));
