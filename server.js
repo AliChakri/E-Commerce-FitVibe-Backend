@@ -6,6 +6,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const http = require("http");
 const { Server } = require("socket.io");
+const product = require("./models/product");
 
 // ---------- Middlewares ----------
 app.use(express.json());
@@ -56,8 +57,9 @@ app.set("io", io);
 const PORT = process.env.PORT || 10000;
 
 mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
+  .then(async () => {
     console.log("Connected to Database");
+    await product.createCollection();
     server.listen(PORT, () => {
       console.log(`Listening on port ${PORT}`);
     });
