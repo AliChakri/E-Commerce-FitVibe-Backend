@@ -65,7 +65,7 @@ authRouter.get('/me', userAuth, getCurrentUser);
 // Change password (BLOCKED)
 authRouter.post(
   '/change-password',
-  blocked
+  changePassword
 );
 
 // Logout
