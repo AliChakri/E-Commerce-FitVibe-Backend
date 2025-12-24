@@ -45,7 +45,7 @@ const blocked = (req, res) => {
 // ------------------ USER PROFILE EDITS ------------------ //
 
 UserRoute.put('/me/name', userAuth, updateName);
-UserRoute.put('/me/avatar', userAuth, updateAvatar);
+UserRoute.put('/me/avatar', userAuth, upload.single("image"),updateAvatar);
 UserRoute.put('/me/address', userAuth, updateAddress);
 
 

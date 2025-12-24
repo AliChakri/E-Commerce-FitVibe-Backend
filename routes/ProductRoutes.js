@@ -23,6 +23,7 @@ const {
 } = require("../controllers/ProductController");
 
 const { userAuth, checkAdmin } = require("../MiddleWare/authProtect");
+const upload = require('../MiddleWare/upload');
 
 
 // -------------------------------------------------
@@ -61,10 +62,10 @@ const blocked = (req, res) => {
 // ------------------ PRODUCT MODIFICATIONS ------------------ //
 
 // Create Product
-productRoute.post('/add', userAuth, checkAdmin, createProduct);
+productRoute.post('/add', userAuth, checkAdmin, upload.array("images", 4),createProduct);
 
 // Edit Product
-productRoute.put('/edit/:id', userAuth, checkAdmin, editProduct);
+productRoute.put('/edit/:id', userAuth, checkAdmin, upload.array("images", 4),editProduct);
 
 // Delete Product
 productRoute.delete('/delete/:id', userAuth, checkAdmin, deleteProduct);
@@ -78,7 +79,7 @@ productRoute.post('/like/:id', userAuth, likeProduct);
 // ------------------ REVIEWS ------------------ //
 
 // Add review
-productRoute.post('/:id/reviews', userAuth, addReview);
+productRoute.post('/:id/reviews', userAuth, upload.array("images", 2),addReview);
 
 // Edit review
 productRoute.put('/:id/reviews', userAuth, editReview);
