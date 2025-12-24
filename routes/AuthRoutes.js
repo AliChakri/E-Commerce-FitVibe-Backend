@@ -33,7 +33,6 @@ const blocked = (req, res) => {
   });
 };
 
-
 // -------------------------------------------------
 // PUBLIC ROUTES
 // -------------------------------------------------
@@ -42,18 +41,17 @@ const blocked = (req, res) => {
 authRouter.post('/signup', userRateLimit(3, 10 * 60 * 1000), registerUser);
 
 // Email verification
-authRouter.get('/verify-email/:token', verifyEmail);
+authRouter.get('/verify-email/:token', userRateLimit(5, 10 * 60 * 1000),verifyEmail);
 
 // Login
 authRouter.post('/login', userRateLimit(5, 10 * 60 * 1000), loginUser);
 
 // Forgot / reset password (BLOCKED)
-authRouter.post('/forgot-password', blocked);
-authRouter.post('/reset-password/:token', blocked);
+authRouter.post('/forgot-password', userRateLimit(5, 10 * 60 * 1000),userAuth, forgotPassword);
+authRouter.post('/reset-password/:token', userRateLimit(5, 10 * 60 * 1000),userAuth, resetPassword);
 
 // Check user (optional)
 authRouter.get('/check-user', checkUser);
-
 
 // -------------------------------------------------
 // PROTECTED ROUTES
@@ -69,7 +67,7 @@ authRouter.post(
 );
 
 // Logout
-authRouter.post('/logout', userAuth, logout);
+authRouter.post('/logout', userRateLimit(5, 10 * 60 * 1000),userAuth, logout);
 
 // Check admin role
 authRouter.get('/check-admin', userAuth, checkAdmin, (req, res) => {

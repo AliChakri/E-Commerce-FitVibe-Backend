@@ -44,8 +44,6 @@ productRoute.get('/:productId/suggestions', suggestedProducts);
 // Get reviews
 productRoute.get('/:id/reviews', getProductReviews);
 
-
-
 // -------------------------------------------------
 //  BLOCKED ROUTES FOR PORTFOLIO (SAFE MODE)
 // -------------------------------------------------

@@ -15,7 +15,6 @@ const {
 
 const orderRoute = express.Router();
 
-
 // -------------------------------------------------
 // READ-ONLY ROUTES (ALLOWED IN PORTFOLIO MODE)
 // -------------------------------------------------
@@ -31,13 +30,11 @@ orderRoute.get('/all', userAuth, checkAdmin, getAllOrders);
 // Get logged-in user's orders (list)
 orderRoute.get('/', userAuth, getOrders);
 
-
 // Admin: Dashboard orders
 orderRoute.get('/dash/all', userAuth, checkAdmin, getUsersOrders);
 
 // Get single order details
 orderRoute.get('/:id', userAuth, getOrderById);
-
 
 // -------------------------------------------------
 // BLOCKED ROUTES FOR PORTFOLIO MODE
@@ -52,20 +49,20 @@ const blocked = (req, res) => {
 
 
 // PayPal actions
-orderRoute.post('/:id/paypal/create', blocked);
-orderRoute.post('/:id/paypal/capture', blocked);
+orderRoute.post('/:id/paypal/create', userAuth, createPayPalOrder);
+orderRoute.post('/:id/paypal/capture', userAuth, capturePayPalOrder);
 
 // Create new order
-orderRoute.post('/', blocked);
+orderRoute.post('/', userAuth, createOrder);
 
 // Update order payment status
-orderRoute.put('/:id/:select', blocked);
+orderRoute.put('/:id/:select', userAuth, checkAdmin, updateOrderToPaid);
 
 // Update order delivery status
-orderRoute.put('/delivery/:id/:status', blocked);
+orderRoute.put('/delivery/:id/:status', userAuth, checkAdmin, updateOrderDelivery);
 
 // Old get order (duplicate)
-orderRoute.get('/:id', userAuth, getOrder); // read only stays working
+orderRoute.get('/:id', userAuth, getOrder);
 
 
 module.exports = orderRoute;

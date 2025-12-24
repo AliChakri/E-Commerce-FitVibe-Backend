@@ -5,6 +5,8 @@ const {
   getReports,
   getReportById,
   getReportStats,
+  updateReportStatus,
+  deleteReport,
 } = require("../controllers/ReportController");
 
 const ReportRoute = express.Router();
@@ -29,8 +31,8 @@ ReportRoute.get("/:id", userAuth, checkAdmin, getReportById);
 // BLOCKED ROUTES (portfolio mode)
 // ------------------------------
 
-ReportRoute.put("/:id", blocked);
+ReportRoute.put("/:id", userAuth, checkAdmin, updateReportStatus);
 
-ReportRoute.delete("/:id", blocked);
+ReportRoute.delete("/:id", userAuth, checkAdmin, deleteReport);
 
 module.exports = ReportRoute;

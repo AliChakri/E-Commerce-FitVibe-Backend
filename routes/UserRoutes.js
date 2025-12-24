@@ -29,8 +29,6 @@ UserRoute.get('/me', userAuth, getProfile);
 // Wishlist (read only)
 UserRoute.get('/me/wishlist', userAuth, getWishlist);
 
-
-
 // -------------------------------------------------
 // BLOCKED ROUTES FOR PORTFOLIO (SAFE MODE)
 // -------------------------------------------------
@@ -60,10 +58,8 @@ UserRoute.delete('/me/wishlist/remove/:productId', userAuth, removeFromWishList)
 // ------------------ ADMIN ACTIONS ------------------ //
 
 UserRoute.post('/ban/:id', userAuth, checkAdmin, banUser);
-UserRoute.delete('/delete/:id', userAuth, checkAdmin, deleteUser);
+UserRoute.delete('/delete/:id', userAuth, blocked);
 UserRoute.post('/role/:id', userAuth, checkAdmin, changeRole);
 UserRoute.post('/details/:id', userAuth, checkAdmin, userDetails);
-
-
 
 module.exports = UserRoute;
