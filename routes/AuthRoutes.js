@@ -69,7 +69,7 @@ authRouter.post(
 );
 
 // Logout
-authRouter.post('/logout', userRateLimit(5, 10 * 60 * 1000),userAuth, logout);
+authRouter.post('/logout', userAuth, logout);
 
 // Check admin role
 authRouter.get('/check-admin', userAuth, checkAdmin, (req, res) => {
