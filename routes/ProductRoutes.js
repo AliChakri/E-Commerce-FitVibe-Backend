@@ -17,7 +17,9 @@ const {
   likeReview,
   editReply,
   deleteReply,
-  likeReply
+  likeReply,
+  deleteReview,
+  addReply
 } = require("../controllers/ProductController");
 
 const { userAuth, checkAdmin } = require("../MiddleWare/authProtect");
