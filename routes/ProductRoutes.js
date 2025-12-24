@@ -7,10 +7,20 @@ const {
   getProduct,
   suggestedProducts,
   searchProduct,
-  getProductReviews
+  getProductReviews,
+  createProduct,
+  editProduct,
+  deleteProduct,
+  likeProduct,
+  addReview,
+  editReview,
+  likeReview,
+  editReply,
+  deleteReply,
+  likeReply
 } = require("../controllers/ProductController");
 
-const { userAuth } = require("../MiddleWare/authProtect");
+const { userAuth, checkAdmin } = require("../MiddleWare/authProtect");
 
 
 // -------------------------------------------------
@@ -51,48 +61,48 @@ const blocked = (req, res) => {
 // ------------------ PRODUCT MODIFICATIONS ------------------ //
 
 // Create Product
-productRoute.post('/add', blocked);
+productRoute.post('/add', userAuth, checkAdmin, createProduct);
 
 // Edit Product
-productRoute.put('/edit/:id', blocked);
+productRoute.put('/edit/:id', userAuth, checkAdmin, editProduct);
 
 // Delete Product
-productRoute.delete('/delete/:id', blocked);
+productRoute.delete('/delete/:id', userAuth, checkAdmin, deleteProduct);
 
 
 // ------------------ LIKES ------------------ //
 
-productRoute.post('/like/:id', blocked);
+productRoute.post('/like/:id', userAuth, likeProduct);
 
 
 // ------------------ REVIEWS ------------------ //
 
 // Add review
-productRoute.post('/:id/reviews', blocked);
+productRoute.post('/:id/reviews', userAuth, addReview);
 
 // Edit review
-productRoute.put('/:id/reviews', blocked);
+productRoute.put('/:id/reviews', userAuth, editReview);
 
 // Delete review
-productRoute.delete('/:productId/reviews/:reviewId', blocked);
+productRoute.delete('/:productId/reviews/:reviewId', userAuth, deleteReview);
 
 // Like/unlike review
-productRoute.put('/:id/reviews/:reviewId/like', blocked);
+productRoute.put('/:id/reviews/:reviewId/like', userAuth, likeReview);
 
 
 // ------------------ REPLIES ------------------ //
 
 // Add reply
-productRoute.post("/:productId/reviews/:reviewId/replies", blocked);
+productRoute.post("/:productId/reviews/:reviewId/replies", userAuth, addReply);
 
 // Edit reply
-productRoute.put("/:productId/reviews/:reviewId/replies/:replyId", blocked);
+productRoute.put("/:productId/reviews/:reviewId/replies/:replyId", userAuth, editReply);
 
 // Delete reply
-productRoute.delete("/:productId/reviews/:reviewId/replies/:replyId", blocked);
+productRoute.delete("/:productId/reviews/:reviewId/replies/:replyId", userAuth, deleteReply);
 
 // Like reply
-productRoute.post("/:productId/reviews/:reviewId/replies/:replyId/like", blocked);
+productRoute.post("/:productId/reviews/:reviewId/replies/:replyId/like", userAuth, likeReply);
 
 
 module.exports = productRoute;

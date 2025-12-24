@@ -46,9 +46,9 @@ const blocked = (req, res) => {
 
 // ------------------ USER PROFILE EDITS ------------------ //
 
-UserRoute.put('/me/name', blocked);
-UserRoute.put('/me/avatar', blocked);
-UserRoute.put('/me/address', blocked);
+UserRoute.put('/me/name', userAuth, updateName);
+UserRoute.put('/me/avatar', userAuth, updateAvatar);
+UserRoute.put('/me/address', userAuth, updateAddress);
 
 
 // ------------------ WISHLIST ACTIONS ------------------ //
@@ -59,9 +59,9 @@ UserRoute.delete('/me/wishlist/remove/:productId', userAuth, removeFromWishList)
 
 // ------------------ ADMIN ACTIONS ------------------ //
 
-UserRoute.post('/ban/:id', blocked);
-UserRoute.delete('/delete/:id', blocked);
-UserRoute.post('/role/:id', blocked);
+UserRoute.post('/ban/:id', userAuth, checkAdmin, banUser);
+UserRoute.delete('/delete/:id', userAuth, checkAdmin, deleteUser);
+UserRoute.post('/role/:id', userAuth, checkAdmin, changeRole);
 UserRoute.post('/details/:id', userAuth, checkAdmin, userDetails);
 
 
