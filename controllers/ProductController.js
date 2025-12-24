@@ -390,23 +390,44 @@ const likeProduct = async (req, res) => {
   }
 };
 
-const deleteProduct = async (req,res) => {
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
 
-    const { id } = req.params;
-    try {
-        if(!mongoose.isValidObjectId(id)){
-            return res.status(400).json({success: false, message: 'Invalid Id'});
-        }
-        const product = await Product.find({id});
-        if(!product) {
-            return res.status(400).json({success: false, message: 'Product Not Found'});
-        }
-        await Product.findByIdAndDelete(id);
-        return res.status(200).json({success: true, message: 'Deleted Successfully'});
-        
-    } catch (error) {
-        return res.status(500).json({success: false, message: error.message});
+  try {
+    if (!mongoose.isValidObjectId(id)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product ID",
+      });
     }
+
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    // Cleanup Cloudinary images
+    const imagesToDelete = product.images || [];
+    if (imagesToDelete.length > 0) {
+      await cleanupCloudinaryImages(imagesToDelete);
+    }
+
+    await Product.findByIdAndDelete(id);
+
+    return res.status(200).json({
+      success: true,
+      message: "Product deleted successfully",
+    });
+
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 const suggestedProducts = async (req, res) => {
