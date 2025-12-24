@@ -63,6 +63,8 @@ authRouter.get('/me', userAuth, getCurrentUser);
 // Change password (BLOCKED)
 authRouter.post(
   '/change-password',
+  userAuth,
+  userRateLimit(5, 10 * 60 * 1000),
   changePassword
 );
 
