@@ -82,7 +82,7 @@ productRoute.post('/like/:id', userAuth, likeProduct);
 productRoute.post('/:id/reviews', userAuth, upload.array("images", 2),addReview);
 
 // Edit review
-productRoute.put('/:id/reviews', userAuth, editReview);
+productRoute.put('/:id/reviews', userAuth, upload.array("images", 2),editReview);
 
 // Delete review
 productRoute.delete('/:productId/reviews/:reviewId', userAuth, deleteReview);
