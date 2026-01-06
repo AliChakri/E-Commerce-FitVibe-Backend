@@ -42,11 +42,11 @@ const getProducts = async (req, res) => {
     // Most liked/rated logic
     const mostRated = [...products]
       .sort((a, b) => b.averageRating - a.averageRating)
-      .slice(0, 6);
+      .slice(0, 8);
 
     const mostReviewed = [...products]
       .sort((a, b) => b.reviews.length - a.reviews.length)
-      .slice(0, 6);
+      .slice(0, 8);
 
     let mostProducts = [...mostRated, ...mostReviewed];
     mostProducts = mostProducts.filter(
